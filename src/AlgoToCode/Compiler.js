@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Editor from "@monaco-editor/react"
 import { Loader2, Play, Sun, Moon, Trash2 } from 'lucide-react'
 import axios from "axios"
@@ -12,6 +12,8 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
   const [userOutput, setUserOutput] = useState("")
   const [expectedOutput, setExpectedOutput] = useState(initialExpectedOutput)
   const [loading, setLoading] = useState(false)
+  const [debugLoading, setDebugLoading] = useState(false)
+  const [debugging, setDebugging] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const [showSummary, setShowSummary] = useState(false)
   const [summary, setSummary] = useState("")
@@ -21,6 +23,10 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
   const options = {
     fontSize: 16,
   }
+
+  useEffect(() => {
+    console.log("Debugging state changed:", debugging);
+  }, [debugging]);
 
   function compile() {
     setLoading(true)
@@ -44,36 +50,44 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
   }
 
   function debug() {
+    console.log("Debugging started");
+    setDebugLoading(true);
+    setDebugging(true);
     const requestBody = {
       input: userInput,
       output: userOutput,
       expectedOutput: expectedOutput,
       code: code
-    }
-
+    };
+  
     axios.post(`http://localhost:8000/debug`, requestBody)
       .then((res) => {
-        const { changes, updatedCode } = res.data
-        setCode(updatedCode)
-        toast.success(changes)
+        const { changes, updatedCode } = res.data;
+        setCode(updatedCode);
+        toast.success(changes);
       })
       .catch((err) => {
-        console.error(err)
-        toast.error("Error: " + (err.response ? err.response.data.error : err.message))
+        console.error(err);
+        toast.error("Error: " + (err.response ? err.response.data.error : err.message));
       })
+      .finally(() => {
+        console.log("Debugging finished");
+        setDebugLoading(false);
+        setDebugging(false);
+      });
   }
 
   function clearOutput() {
     setUserOutput("")
   }
 
-  function correctError() {
+  function correctError(retries = 3) {
     setCorrectingError(true)
     setSummary("")
     setSearchResults([])
     setShowSummary(false)
 
-    axios.post(`http://localhost:8000/ultra-debug`, { error: userOutput })
+    axios.post(`https://justpromptaiagent-50024178798.development.catalystappsail.in/ultra-debug`, { error: userOutput })
       .then((res) => {
         setSummary(res.data.summary)
         setSearchResults(res.data.searchResults)
@@ -81,7 +95,11 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
       })
       .catch((err) => {
         console.error(err)
-        toast.error("Error: " + (err.response ? err.response.data.error : err.message))
+        if (retries > 0) {
+          setTimeout(() => correctError(retries - 1), 1000)
+        } else {
+          toast.error("Error: " + (err.response ? err.response.data.error : err.message))
+        }
       })
       .finally(() => {
         setCorrectingError(false)
@@ -98,15 +116,26 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
             <button
               onClick={compile}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-200 flex items-center"
+              disabled={loading}
             >
-              <Play className="mr-2 h-4 w-4" />
-              Run
+              {loading ? (
+                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+              ) : (
+                <Play className="mr-2 h-4 w-4" />
+              )}
+              {loading ? "Running" : "Run"}
             </button>
             <button
               onClick={debug}
               className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors duration-200 flex items-center"
+              disabled={debugLoading}
             >
-              Debug
+              {debugLoading ? (
+                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+              ) : (
+                "Debug"
+              )}
+              {debugLoading ? "Debugging" : "Debug"}
             </button>
             <button
               onClick={() => setDarkMode(!darkMode)}
@@ -185,4 +214,3 @@ export default function Compiler({ code: initialCode, language, expectedOutput: 
     </div>
   )
 }
-

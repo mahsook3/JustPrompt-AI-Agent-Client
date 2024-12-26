@@ -67,15 +67,15 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-green-100">
       <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-3xl">
           <div className="mb-8">
             <div className="relative pt-1">
-              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
                 <div
                   style={{ width: `${progress}%` }}
-                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400 transition-all duration-500 ease-in-out"
                 ></div>
               </div>
             </div>
@@ -100,7 +100,7 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
                   name="language"
                   value={formData.language}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-lg rounded-md"
+                  className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-lg rounded-md"
                 >
                   <option value="">Select a language</option>
                   <option value="java">Java</option>
@@ -122,7 +122,7 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
                   onChange={handleInputChange}
                   placeholder="Describe your requirements"
                   rows={6}
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-lg"
                 ></textarea>
               </div>
             )}
@@ -138,7 +138,7 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
                   value={formData.algorithm}
                   onChange={handleInputChange}
                   placeholder="Enter algorithm name"
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-lg"
                 />
               </div>
             )}
@@ -154,7 +154,7 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
                   onChange={handleInputChange}
                   placeholder="Describe the expected output"
                   rows={6}
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-lg"
+                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-lg"
                 ></textarea>
               </div>
             )}
@@ -177,8 +177,8 @@ export default function ModernInputForm({ onCodeUpdate, onSubmit }) {
           onClick={handleNext}
           className={`absolute right-0 bottom-0 m-4 px-6 py-3 rounded-md text-lg font-medium transition-colors duration-300 ${
             currentStep === steps.length - 1
-              ? 'bg-blue-600 text-white hover:bg-blue-700'
-              : 'bg-blue-600 text-white hover:bg-blue-700'
+              ? 'bg-green-400 text-white hover:bg-green-700'
+              : 'bg-green-400 text-white hover:bg-green-700'
           }`}
         >
           {isLoading ? 'Loading...' : currentStep === steps.length - 1 ? 'Submit' : 'Next'}
